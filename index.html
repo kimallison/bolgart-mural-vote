@@ -190,17 +190,28 @@ function finish() {
   show('sForm');
 }
 function payload() {
-  return JSON.stringify({
-    name: document.getElementById('name').value.trim().slice(0, 80),
-    want: document.getElementById('want').value.trim().slice(0, 600),
-    drop: document.getElementById('drop').value.trim().slice(0, 300),
-    kept: KEPT, out: OUT
-  });
+  var lines = ['Place of Water - community swipe vote'];
+  var nm = document.getElementById('name').value.trim();
+  lines.push(nm ? 'Name: ' + nm : 'Name: (not given)');
+  lines.push('');
+  lines.push('KEPT ON THE WALL (' + KEPT.length + '):');
+  KEPT.forEach(function (t) { lines.push('  + ' + t); });
+  lines.push('');
+  lines.push('TAKEN OFF (' + OUT.length + '):');
+  OUT.forEach(function (t) { lines.push('  - ' + t); });
+  var want = document.getElementById('want').value.trim();
+  var drop = document.getElementById('drop').value.trim();
+  if (want) { lines.push(''); lines.push('Wants to see: ' + want); }
+  if (drop) { lines.push('Should not be: ' + drop); }
+  return lines.join('\n');
 }
 document.getElementById('bSend').addEventListener('click', function () {
-  fetch('api/vote', { method: 'POST', headers: { 'content-type': 'application/json' }, body: payload() })
-    .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); show('sThanks'); })
-    .catch(function () { document.getElementById('errMsg').style.display = 'block'; });
+  var body = encodeURIComponent(payload());
+  var subject = encodeURIComponent('Bolgart mural vote' + (document.getElementById('name').value.trim() ? ' - ' + document.getElementById('name').value.trim() : ''));
+  document.getElementById('okMsg').style.display = 'block';
+  document.getElementById('okMsg').textContent = 'Your email app is opening with the vote attached - just hit send.';
+  document.getElementById('okMsg').style.color = '#fff';
+  window.location.href = 'mailto:kim.e.allison@gmail.com?subject=' + subject + '&body=' + body;
 });
 document.getElementById('bCopy').addEventListener('click', function () {
   var lines = ['Bolgart mural swipe vote'];
