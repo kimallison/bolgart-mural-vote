@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolgart mural vote - live count</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%230a0a0a'/></svg>">
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin:0; padding:0; background:#0a0a0a; color:#fff; }
+  body { font-family:-apple-system,'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; padding:1.4rem 1.1rem 2.5rem; }
+  h1 { font-family:'Playfair Display',Georgia,serif; font-weight:500; font-size:1.5rem; margin:0 0 0.35rem; }
+  .sub { color:#9a9a9a; font-size:0.85rem; margin-bottom:1.2rem; }
+  .sub b { color:#fff; font-weight:600; }
+  .sec { margin-top:1.5rem; }
+  .sec h2 { font-family:'Playfair Display',Georgia,serif; font-weight:500; font-size:1.08rem; margin:0 0 0.55rem; color:#e8e8e8; }
+  .row { display:flex; justify-content:space-between; gap:1rem; padding:0.42rem 0; border-bottom:1px solid #1e1e1e; font-size:0.92rem; }
+  .row .n { color:#e8e8e8; }
+  .row .c { font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .c .k { color:#5dd97c; font-weight:600; }
+  .c .o { color:#ff7b6b; font-weight:600; margin-left:0.7em; }
+  .none { color:#5a5a5a; }
+  .notes { margin-top:1.6rem; }
+  .notes .q { margin:0.35rem 0; font-size:0.88rem; color:#c9c9c9; }
+  .notes .who { color:#7a7a7a; font-size:0.8rem; }
+  footer { margin-top:2.2rem; font-size:0.78rem; color:#6a6a6a; }
+  a { color:#e8e8e8; }
+</style>
+</head>
+<body>
+<h1>How everyone is voting</h1>
+<div class="sub"><b id="tot">0</b> people have voted so far. Green is keep, red is take out. This page updates itself every 20 seconds.</div>
+<div id="body">
+  <div class="none">Loading the count</div>
+</div>
+<div class="notes" id="notes"></div>
+<footer>Place of Water mural for the Bolgart Hall. Vote at <a href="/">bolgart-mural-vote.vercel.app</a></footer>
+<script>
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function draw(d) {
+  document.getElementById('tot').textContent = d.total;
+  const body = document.getElementById('body');
+  if (!d.ok) { body.innerHTML = '<div class="none">The count is not loading. Try again in a moment.</div>'; return; }
+  let out = '';
+  d.sections.forEach(function (sec) {
+    out += '<div class="sec"><h2>' + esc(sec.name) + '</h2>';
+    sec.tiles.forEach(function (t) {
+      const c = (t.kept || t.out)
+        ? '<span class="k">' + t.kept + ' keep</span><span class="o">' + t.out + ' out</span>'
+        : '<span class="none">no votes yet</span>';
+      out += '<div class="row"><span class="n">' + esc(t.name) + '</span><span class="c">' + c + '</span></div>';
+    });
+    out += '</div>';
+  });
+  body.innerHTML = out;
+  const notes = document.getElementById('notes');
+  let n = '';
+  if (d.want.length || d.drop.length) {
+    n += '<div class="sec"><h2>What people said</h2>';
+    d.want.forEach(w => { n += '<div class="q">' + esc(w) + '</div>'; });
+    d.drop.forEach(w => { n += '<div class="q" style="color:#8a8a8a">Should not be there: ' + esc(w) + '</div>'; });
+    n += '</div>';
+  }
+  notes.innerHTML = n;
+}
+function load() {
+  fetch('/api/tally', { cache: 'no-store' }).then(r => r.json()).then(draw).catch(function () {
+    document.getElementById('body').innerHTML = '<div class="none">The count is not loading. Try again in a moment.</div>';
+  });
+}
+load();
+setInterval(load, 20000);
+</script>
+</body>
+</html>
