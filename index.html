@@ -226,18 +226,6 @@ document.getElementById('bSend').addEventListener('click', function () {
     document.getElementById('okMsg').textContent = 'That did not save just then. Check the connection and try again.';
   });
 });
-document.getElementById('
-  lines.push('OUT (' + OUT.length + '):'); OUT.forEach(function (t) { lines.push('  - ' + t); });
-  var want = document.getElementById('want').value.trim();
-  var drop = document.getElementById('drop').value.trim();
-  if (want) lines.push('Wants to see: ' + want);
-  if (drop) lines.push('Should not be: ' + drop);
-  var text = lines.join('\n');
-  var done = function () { var m = document.getElementById('okMsg'); m.style.display = 'block'; m.style.color = '#fff'; m.textContent = 'Votes copied. Paste them to Kim Allison.'; };
-  var fb = function () { var ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); done(); } catch (e) {} document.body.removeChild(ta); };
-  if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(text).then(done, fb); } else { fb(); }
-});
 document.addEventListener('keydown', function (e) {
   if (!started) return;
   if (e.key === 'ArrowRight') decide(true);
