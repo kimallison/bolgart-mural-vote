@@ -1,0 +1,22 @@
+<html><body style="margin:0;background:#000">
+<iframe id="f" src="index.html" style="width:430px;height:940px;border:0"></iframe>
+<script>
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    var d = document.getElementById('f').contentDocument;
+    var w = document.getElementById('f').contentWindow;
+    var scr = d.getElementById('sIntro');
+    var p = scr.querySelectorAll('p')[1];
+    var range = d.createRange();
+    range.selectNodeContents(p);
+    var rects = [];
+    for (var i=0;i<range.getClientRects().length && i<12;i++) {
+      var r = range.getClientRects()[i];
+      rects.push([Math.round(r.left), Math.round(r.right), p.textContent.trim().slice(0,18)]);
+    }
+    // font actually used?
+    var cs = w.getComputedStyle(p);
+    document.title = JSON.stringify({rects: rects, font: cs.fontFamily, size: cs.fontSize});
+  }, 1200);
+});
+</script></body></html>

@@ -1,0 +1,20 @@
+<html><body style="margin:0;background:#000">
+<iframe id="f" src="index.html" style="width:430px;height:940px;border:0"></iframe>
+<script>
+window.addEventListener('load', function() {
+  setTimeout(function() {
+    var d = document.getElementById('f').contentDocument;
+    var w = document.getElementById('f').contentWindow;
+    var out = {vw: w.innerWidth, docScrollW: d.documentElement.scrollWidth, bodyScrollW: d.body.scrollWidth};
+    var scr = d.getElementById('sIntro');
+    out.screen = scr.getBoundingClientRect().width;
+    var ps = scr.querySelectorAll('p');
+    out.p0 = ps[0].getBoundingClientRect().width;
+    out.p0right = Math.round(ps[0].getBoundingClientRect().right);
+    var cs = w.getComputedStyle(d.body);
+    out.bodyOverflow = cs.overflow; out.bodyX = cs.overflowX;
+    out.padL = Math.round(scr.getBoundingClientRect().left);
+    document.title = JSON.stringify(out);
+  }, 1200);
+});
+</script></body></html>
