@@ -90,9 +90,8 @@
     <textarea id="drop" rows="2" placeholder="Anything on this board that should not be there? (optional)"></textarea>
     <input id="name" placeholder="Your name (optional)">
     <button class="big" id="bSend">Save my vote</button>
-    <button class="ghost" id="bCopy">Copy my vote to paste somewhere</button>
     <div class="ok" id="okMsg">Thank you - your vote is in.</div>
-    <div class="ok" id="errMsg" style="color:#e05555; display:none;">That did not send. Try again, or use the copy button and message it to Kim Allison.</div>
+    <div class="ok" id="errMsg" style="color:#e05555; display:none;">That did not save just then. Check the connection and try again.</div>
   </div>
 
   <div class="screen" id="sThanks">
@@ -221,14 +220,10 @@ document.getElementById('bSend').addEventListener('click', function () {
   }).catch(function () {
     btn.disabled = false; btn.textContent = 'Save my vote';
     document.getElementById('okMsg').style.display = 'block';
-    document.getElementById('okMsg').textContent = 'Could not save just then. Use "Save a copy instead" below.';
+    document.getElementById('okMsg').textContent = 'That did not save just then. Check the connection and try again.';
   });
 });
-document.getElementById('bCopy').addEventListener('click', function () {
-  var lines = ['Bolgart mural swipe vote'];
-  var nm = document.getElementById('name').value.trim();
-  lines.push(nm ? 'Name: ' + nm : 'Name: (not given)');
-  lines.push('KEPT (' + KEPT.length + '):'); KEPT.forEach(function (t) { lines.push('  + ' + t); });
+document.getElementById('
   lines.push('OUT (' + OUT.length + '):'); OUT.forEach(function (t) { lines.push('  - ' + t); });
   var want = document.getElementById('want').value.trim();
   var drop = document.getElementById('drop').value.trim();
