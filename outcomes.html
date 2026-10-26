@@ -103,7 +103,7 @@ function load() {
       SUGG.forEach(function (x) {
         s += '<div class="row"><span class="n" style="font-weight:600">' + esc(x.t) + '</span><span class="c"><span class="who" style="color:#7a7a7a;font-size:0.78rem;text-align:right">' + esc(x.who) + '</span></span></div>';
       });
-      document.getElementById('sugg').innerHTML = s + '<div class="rule">The rules from round one hold: everything native to this district, nothing modern. <b>The vote decides the people question</b> - an old farmer at the silos goes on only if the town says so.</div><div class="rule">No numbers on this page before you vote. Once you have, the running count reveals here: <b><a href="/roundtwo.html">the round-two count</a></b>.</div>';
+      document.getElementById('sugg').innerHTML = s;
     } else { document.getElementById('sugg').innerHTML = '<div class="none">Count loading - give it a moment.</div>'; }
   }).catch(function () {
     document.getElementById('sugg').innerHTML = '<div class="none">Count loading - give it a moment.</div>';
