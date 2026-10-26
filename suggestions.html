@@ -86,7 +86,7 @@
 <script>
 var IMG = null;
 var MANIFEST = [{"id": "TRACTOR_CROP", "i": 0, "t": "A tractor working the crop", "d": "A tractor in the paddock at harvest - the day the town stops."}, {"id": "HARVEST_IN_PROGRESS", "i": 1, "t": "Harvest in progress", "d": "Trucks on the road and the header working - the whole harvest rhythm."}, {"id": "SHEEPDOG_WORKING_SHEEP", "i": 2, "t": "A sheep dog working sheep", "d": "The dog, the sheep in the yards, and the Angus cattle on the hill."}, {"id": "GRAIN_TRUCKS", "i": 3, "t": "Grain trucks carting off the field", "d": "The trucks that run all harvest, taking the grain to the silos."}, {"id": "XF_UTE", "i": 4, "t": "The red XF Falcon ute", "d": "The local legend - a red XF ute like the one everyone can pick."}, {"id": "BEDFORD_TRUCK", "i": 5, "t": "The blue Bedford truck", "d": "The old blue Bedford that carted hay and bags of wool around the district."}, {"id": "SAWMILL_HILL_CAR", "i": 6, "t": "The rusty old car on Sawmill Hill", "d": "It has been up there forever and everybody knows it."}, {"id": "SILOS", "i": 7, "t": "Silos on the skyline", "d": "The white silos over the paddocks, seen from the highway."}, {"id": "OLD_FARMER", "i": 8, "t": "An old farmer, working", "d": "One neighbour said no people, another asked for the farmer. The vote decides."}, {"id": "EMU_WALLABY", "i": 9, "t": "Emu and wallaby", "d": "Bigger native animals against the trees."}, {"id": "DONKEY_ORCHID_GILGIE", "i": 10, "t": "Donkey orchid and Gilgie", "d": "The native orchids at ground level in the bush."}, {"id": "HILLTOP_GROVE", "i": 11, "t": "A hilltop stand of salmon gums", "d": "Salmon gums, wandoo and casuarina on the hills off Bolgart West Road and around Wattening."}, {"id": "BELL_TOWER", "i": 12, "t": "The bell tower", "d": "Bolgart's own tower, part of the town's history."}, {"id": "FOOTY_CLUB", "i": 13, "t": "The football club", "d": "Saturday footy at the Rec - one of the things the town is known by."}, {"id": "WHEAT_REDO", "i": 14, "t": "Wheat that reads as real wheat", "d": "A redraw of the wheat on the wall, so it looks like the crop we grow."}, {"id": "TOWN_FARM_SCENE", "i": 15, "t": "A farming scene that represents the town", "d": "Paddock, machine, sheep and sky in one picture."}, {"id": "COMBINE_FARMING_NATURE", "i": 16, "t": "Farming and nature, one wall", "d": "The whole mural sits as one story: farming and the native bush."}];
-var YES = []; var NO = []; var pos = 0; var started = false; var dragging = false; var startX = 0; var dragX = 0; var animating = false;
+var YES = []; var NO = []; var pos = 0; var saveTotal = null; var started = false; var dragging = false; var startX = 0; var dragX = 0; var animating = false;
 var card = document.getElementById('card');
 document.getElementById('bStart').addEventListener('click', function () {
   started = true;
@@ -203,12 +203,15 @@ function showOk() {
   document.getElementById('okMsg').style.display = 'block';
   document.getElementById('bSend').style.display = 'none';
   document.getElementById('bCopy').style.display = 'none';
+  try {
+    sessionStorage.setItem('mural_sg_last', JSON.stringify({ yes: YES, no: NO, name: document.getElementById('name').value, idea: document.getElementById('idea').value, expectedTotal: saveTotal }));
+  } catch (e) {}
   setTimeout(function () { window.location.href = '/roundtwo.html'; }, 900);
 }
 function sendIt() {
   fetch('/api/sg', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ yes: YES, no: NO, name: document.getElementById('name').value, idea: document.getElementById('idea').value }) })
     .then(function (r) { return r.json(); })
-    .then(function (d) { if (d.ok) { showOk(); } else { throw new Error('no ok'); } })
+    .then(function (d) { if (d.ok) { saveTotal = d.total; showOk(); } else { throw new Error('no ok'); } })
     .catch(copyOut);
 }
 function copyOut() {
