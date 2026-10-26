@@ -72,7 +72,7 @@ function load() {
   fetch('/api/sg-tally', { cache: 'no-store' }).then(r => r.json()).then(function (d) {
     if (!d.ok) return;
     if (liveCaughtUp(d.total)) { STASH = null; }
-    document.getElementById('tot').textContent = d.total;
+    document.getElementById('tot').textContent = d.total + (STASH ? 1 : 0);
     if (STASH) {
       const copy = JSON.parse(JSON.stringify(d.counts));
       const copies = JSON.parse(JSON.stringify(d.answers));
