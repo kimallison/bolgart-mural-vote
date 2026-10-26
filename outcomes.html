@@ -86,7 +86,7 @@ function load() {
       
       let s = '';
       SUGG.forEach(function (x) {
-        s += '<div class="row"><span class="n" style="font-weight:600">' + esc(x.t) + '</span><span class="c"><span class="who" style="color:#7a7a7a;font-size:0.78rem;text-align:right">' + esc(x.who) + '</span></span></div>';
+        s += '<div class="row"><span class="n" style="font-weight:600">' + esc(x.t) + '</span><span class="c"><span class="who" style="color:#7a7a7a;font-size:0.78rem;text-align:right;white-space:normal;max-width:190px;line-height:1.35">' + esc(x.who) + '</span></span></div>';
       });
       document.getElementById('sugg').innerHTML = s;
     } else { document.getElementById('sugg').innerHTML = '<div class="none">Count loading - give it a moment.</div>'; }
