@@ -73,14 +73,11 @@ function load() {
     if (!d.ok) return;
     if (liveCaughtUp(d.total)) { STASH = null; }
     document.getElementById('tot').textContent = d.total + (STASH ? 1 : 0);
-    if (STASH) {
-      const copy = JSON.parse(JSON.stringify(d.counts));
-      const copies = JSON.parse(JSON.stringify(d.answers));
-      mergeStash(copy, copies);
-      var c2 = copy; var a2 = copies;
-    } else { var c2 = d.counts; var a2 = d.answers; }
+    const cy = STASH ? (function () { const c = JSON.parse(JSON.stringify(d.counts.yes)); (STASH.yes || []).forEach(function (id) { if (c[id] !== undefined) c[id]++; }); return c; })() : d.counts.yes;
+    const cn = STASH ? (function () { const c = JSON.parse(JSON.stringify(d.counts.no)); (STASH.no || []).forEach(function (id) { if (c[id] !== undefined) c[id]++; }); return c; })() : d.counts.no;
+    const a2 = STASH ? (function () { const a = JSON.parse(JSON.stringify(d.answers)); if (STASH.idea) { a.unshift({ idea: STASH.idea, name: STASH.name || 'yours' }); } return a; })() : d.answers;
     let s = '';
-    const ranked = SUGG.map(function (x) { const c = c2[x.id] || { yes: 0, no: 0 }; return { x: x, net: c.yes - c.no, yes: c.yes, no: c.no }; }).sort(function (a, b) { return b.net - a.net; });
+    const ranked = SUGG.map(function (x) { const yy = cy[x.id] || 0; const nn = cn[x.id] || 0; return { x: x, net: yy - nn, yes: yy, no: nn }; }).sort(function (a, b) { return b.net - a.net; });
     ranked.forEach(function (r) {
       const c = (r.yes || r.no)
         ? '<span class="k">' + r.yes + ' put it on</span><span class="o">' + r.no + ' not</span>'
