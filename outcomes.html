@@ -36,11 +36,7 @@
 <h2>What the wall is wearing well</h2>
 <div id="body"><div class="none">Loading the count</div></div>
 
-<h2>What people said</h2>
-<div id="notes"><div class="none">Loading</div></div>
-
-<h2>Your words, turned into the next round</h2>
-<div class="sub">Everything people asked for, grouped. The rules from round one: <b>everything native to this district</b>, and <b>nothing modern</b>. A few people suggested painters and artists - this round is about what lives on the wall, not who paints it.</div>
+<h2>What the town asked for next</h2>
 <div id="sugg"></div>
 <a class="cta" href="/suggestions.html">Vote on these ideas <span>- one at a time, takes a minute</span></a>
 
@@ -81,17 +77,6 @@ function load() {
         });
       });
       document.getElementById('body').innerHTML = out;
-      const notes = document.getElementById('notes');
-      let n = '';
-      if (d.want.length || d.drop.length) {
-        d.want.forEach(function (w) {
-          n += '<div class="quote">' + esc(w) + '</div>';
-        });
-        d.drop.forEach(function (w) {
-          n += '<div class="quote" style="color:#8a8a8a">Not wanted: ' + esc(w) + '</div>';
-        });
-      } else { n = '<div class="none">Nothing written this round.</div>'; }
-      notes.innerHTML = n;
     }
   }).catch(function () {
     document.getElementById('body').innerHTML = '<div class="none">The count is not loading. Try again in a moment.</div>';
