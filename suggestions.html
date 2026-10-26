@@ -74,6 +74,7 @@
 
   <div class="endbox" id="sEnd" style="display:none">
     <h2>All done</h2>
+    <button class="ghost" id="bBack" style="margin-bottom:0.9rem">Go back and change one</button>
     <p>One last thing: anything else we should paint?</p>
     <p style="margin-bottom:0.4rem"><a href="/roundtwo.html">See the running count</a></p>
     <textarea id="idea" rows="3" placeholder="Anything else for the wall?"></textarea>
@@ -88,7 +89,7 @@
 <script>
 var IMG = null;
 var MANIFEST = [{"i": 0, "t": "A tractor working the crop", "who": "Asked for three times, by name", "d": "Harvest is the day the town stands still for. Suggested: a tractor in the field at harvest, an airseeder or a header at work.", "id": "TRACTOR_CROP"}, {"i": 1, "t": "Harvest in progress", "who": "Suggested twice, nearly word for word", "d": "Trucks on the road, the header working - the whole harvest rhythm, not just the machine.", "id": "HARVEST_IN_PROGRESS"}, {"i": 2, "t": "A sheep dog working sheep", "who": "Suggested twice", "d": "The dog on the back of the ute, sheep in the yards, Angus cattle on the hill. Reference photo: the merinos from round one.", "id": "SHEEPDOG_WORKING_SHEEP"}, {"i": 3, "t": "Grain trucks carting from the field", "who": "Part of the harvest asks", "d": "The idea: trucks on the harvest run, carting off the field.", "id": "GRAIN_TRUCKS"}, {"i": 4, "t": "The red XF Falcon ute", "who": "Named by a neighbour, after a local resident", "d": "Everybody here can pick the ute. Reference photo: an XF Falcon utility, the same body shape.", "id": "XF_UTE"}, {"i": 5, "t": "The blue Bedford truck", "who": "A memory from growing up here", "d": "The truck that carted hay and bags of wool around the district. Reference photo: a Bedford of the right age.", "id": "BEDFORD_TRUCK"}, {"i": 6, "t": "The rusty old car on Sawmill Hill", "who": "Nominated straight up: it should cop a vote", "d": "It has been there forever and everybody knows it - your idea, put into words.", "id": "SAWMILL_HILL_CAR"}, {"i": 7, "t": "Silos on the skyline", "who": "Asked for with the farmer", "d": "Bolgart from the highway. Reference photo: CBH silos, the same white shape against the sky.", "id": "SILOS"}, {"i": 8, "t": "An old farmer, working", "who": "Asked for alongside the silos", "d": "One neighbour said no people, another asked for the farmer. You decide where the wall lands.", "id": "OLD_FARMER"}, {"i": 9, "t": "Emu and wallaby", "who": "A maybe from a neighbour", "d": "Maybe some larger fauna for scale - emu against the trees. Reference photo: an emu.", "id": "EMU_WALLABY"}, {"i": 10, "t": "Donkey orchid and Gilgie", "who": "A neighbour's spring pick", "d": "The native orchids at ground level in the bush. Reference photo: Diuris, the donkey orchid.", "id": "DONKEY_ORCHID_GILGIE"}, {"i": 11, "t": "A hilltop stand of salmon gums", "who": "Described with its landscape", "d": "Salmon gums, wandoo and casuarina on the hills you see from Bolgart West Road and around Wattening.", "id": "HILLTOP_GROVE"}, {"i": 12, "t": "The bell tower", "who": "From the history block, with the footy club", "d": "Bolgart's own tower, put into words as the idea.", "id": "BELL_TOWER"}, {"i": 13, "t": "The football club", "who": "From the history block, with the bell tower", "d": "Saturday footy at the Rec, one of the things the town is known by.", "id": "FOOTY_CLUB"}, {"i": 14, "t": "Draw the wheat so it reads as wheat", "who": "A plainly-said round-one hint", "d": "One voter said: wheat that looks like wheat, not the image shown. This is the wheat as it stands; the answer is to redraw it.", "id": "WHEAT_REDO"}, {"i": 15, "t": "A farming scene that represents the town", "who": "Asked for as one whole scene", "d": "Paddock, machine, sheep, sky. Reference photo: the paddock windmill from round one.", "id": "TOWN_FARM_SCENE"}, {"i": 16, "t": "Farming and nature woven across the wall", "who": "The through-line several people wanted", "d": "Not a new animal - the way the whole mural sits together: farming scenes and native bush telling one story.", "id": "COMBINE_FARMING_NATURE"}];
-var YES = []; var NO = []; var pos = 0; var started = false; var dragging = false; var startX = 0; var dragX = 0;
+var YES = []; var NO = []; var pos = 0; var started = false; var dragging = false; var startX = 0; var dragX = 0; var animating = false;
 var card = document.getElementById('card');
 document.getElementById('bStart').addEventListener('click', function () {
   started = true;
@@ -106,11 +107,19 @@ function loadImage() {
   document.getElementById('cwho').textContent = m.who;
   document.getElementById('cdesc').textContent = m.d;
   counter();
+  refreshUndo();
+}
+function refreshUndo() {
+  var b = document.getElementById('bUndo');
+  if (!started || (YES.length + NO.length > 0 && !animating)) { b.style.opacity = '1'; }
+  else { b.style.opacity = '0.35'; }
 }
 function counter() { document.getElementById('counter').textContent = (pos + 1) + ' / ' + MANIFEST.length; }
 function decide(kept) {
+  if (animating || pos >= MANIFEST.length) return;
   var m = MANIFEST[pos];
   (kept ? YES : NO).push(m.id);
+  animating = true;
   flash(kept);
   anim(kept ? 1 : -1);
 }
@@ -127,6 +136,8 @@ function anim(dir) {
 }
 function next() {
   pos++;
+  animating = false;
+  refreshUndo();
   card.style.transition = 'none';
   card.style.transform = 'translateX(0) rotate(0deg)';
   card.style.opacity = '1';
@@ -134,7 +145,7 @@ function next() {
   loadImage();
 }
 function undoSimple() {
-  if (YES.length + NO.length === 0 || pos === 0) return;
+  if (animating || YES.length + NO.length === 0 || pos === 0) return;
   pos--;
   var m = MANIFEST[pos];
   if (YES.length && m.id === YES[YES.length - 1]) YES.pop(); else if (NO.length) NO.pop();
@@ -142,7 +153,7 @@ function undoSimple() {
 }
 document.getElementById('bOut').addEventListener('click', function(){ if(started) decide(false); });
 document.getElementById('bKeep').addEventListener('click', function(){ if(started) decide(true); });
-document.getElementById('bUndo').addEventListener('c' + 'lick', function(){ if(started) undoSimple(); });
+document.getElementById('bUndo').addEventListener('click', function(){ if(started) undoSimple(); });
 document.addEventListener('keydown', function (e) {
   if (!started) return;
   if (e.key === 'ArrowRight') decide(true);
@@ -177,6 +188,20 @@ function finish() {
   document.querySelector('.undo').style.display = 'none';
   document.querySelector('.hint').style.display = 'none';
   document.getElementById('sEnd').style.display = 'block';
+  window.scrollTo(0, 0);
+  refreshUndo();
+}
+function backToDeck() {
+  document.getElementById('sEnd').style.display = 'none';
+  document.getElementById('stage').style.display = 'block';
+  document.querySelector('.btns').style.display = 'flex';
+  document.querySelector('.undo').style.display = 'block';
+  document.querySelector('.hint').style.display = 'block';
+  pos = MANIFEST.length - 1;
+  var m = MANIFEST[pos];
+  if (YES.length && m.id === YES[YES.length - 1]) YES.pop(); else if (NO.length) NO.pop();
+  animating = false;
+  loadImage();
 }
 function showOk() {
   document.getElementById('okMsg').style.display = 'block';
@@ -203,6 +228,7 @@ function copyOut() {
 }
 document.getElementById('bSend').addEventListener('click', sendIt);
 document.getElementById('bCopy').addEventListener('click', copyOut);
+document.getElementById('bBack').addEventListener('click', backToDeck);
 </script>
 </body>
 </html>
