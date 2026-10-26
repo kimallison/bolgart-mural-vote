@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolgart mural - the suggested additions</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%230a0a0a'/></svg>">
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin:0; padding:0; background:#0a0a0a; color:#fff; }
+  body { font-family:-apple-system,'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow-y:auto; }
+  .screen { min-height:100vh; padding:1.6rem 1.2rem 2.6rem; box-sizing:border-box; }
+  h1 { font-family:'Playfair Display',Georgia,serif; font-weight:500; font-size:1.55rem; margin:0 0 0.4rem; }
+  h2 { font-family:'Playfair Display',Georgia,serif; font-weight:500; font-size:1.1rem; margin:0 0 0.5rem; }
+  .sub { color:#9a9a9a; font-size:0.88rem; margin-bottom:1.1rem; line-height:1.5; }
+  .counter { color:#9a9a9a; font-size:0.8rem; margin:0.5rem 0 0.9rem; }
+  .card { min-height:56vh; border:1px solid #262626; border-radius:16px; background:#121212; padding:1.4rem 1.2rem 1.2rem; margin-bottom:1rem; }
+  .card .tag { font-size:0.72rem; letter-spacing:0.08em; text-transform:uppercase; color:#7a7a7a; margin-bottom:0.7rem; }
+  .card .who { font-size:0.78rem; color:#8a8a8a; margin-top:0.8rem; }
+  .card .item { font-family:'Playfair Display',Georgia,serif; font-weight:500; font-size:1.28rem; line-height:1.35; }
+  .card .why { font-size:0.92rem; color:#c9c9c9; line-height:1.55; margin-top:0.7rem; white-space:pre-wrap; }
+  .btnrow { display:flex; gap:0.7rem; }
+  button { flex:1; font-family:inherit; font-size:1rem; padding:0.95rem 0.6rem; border-radius:12px; border:1px solid #2c2c2c; background:#161616; color:#fff; cursor:pointer; }
+  button:active { transform:translateY(1px); }
+  button.yes { border-color:#1f4a2c; color:#5dd97c; }
+  button.no { border-color:#4a2020; color:#ff7b6b; }
+  .flash-good { background:#10240f !important; }
+  .flash-bad { background:#2a0f0f !important; }
+  textarea, input { width:100%; box-sizing:border-box; font-family:inherit; font-size:0.98rem; padding:0.8rem; border-radius:10px; border:1px solid #2c2c2c; background:#121212; color:#fff; margin-bottom:0.8rem; resize:vertical; }
+  .big { width:100%; font-size:1.05rem; padding:1rem 0.6rem; font-weight:600; }
+  .ok { color:#5dd97c; margin-top:0.8rem; display:none; font-size:0.95rem; }
+  .ghost { color:#8a8a8a; font-size:0.85rem; margin-top:0.8rem; cursor:pointer; text-decoration:underline; }
+  footer { margin-top:1.8rem; font-size:0.78rem; color:#6a6a6a; }
+  a { color:#e8e8e8; }
+  ::placeholder { color:#5a5a5a; }
+</style>
+</head>
+<body>
+<div class="screen">
+  <div id="deck">
+    <h1>Round two: the new ideas</h1>
+    <div class="sub">The first round is closed - what the town kept, cut and asked for gave us this list. One idea at a time: would it go on the wall, or not? There is no wrong answer.</div>
+    <div class="counter" id="counter">Idea 0 of 0</div>
+    <div class="card" id="card">
+      <div class="tag" id="tag"></div>
+      <div class="item" id="item"></div>
+      <div class="who" id="who"></div>
+      <div class="why" id="why"></div>
+    </div>
+    <div class="btnrow">
+      <button class="no" id="bNo">Not on the wall</button>
+      <button class="yes" id="bYes">Put it on</button>
+    </div>
+    <div class="ghost" id="bPass">Skip this one</div>
+  </div>
+
+  <div id="sEnd" style="display:none">
+    <h2>All done</h2>
+    <div class="sub">One last thing: anything else we should paint? This comes from the same place the last round's ideas came from - the people who live here.</div>
+    <textarea id="idea" rows="3" placeholder="Anything else for the wall?"></textarea>
+    <input id="name" placeholder="Your name (optional)">
+    <button class="big" id="bSend">Save my answers</button>
+    <div class="ok" id="okMsg">Thank you - your answers are in.</div>
+    <div class="ghost" id="bCopy">Save a copy instead</div>
+    <div class="ghost"><a href="/outcomes.html">See the outcomes page</a></div>
+  </div>
+
+  <footer>Place of Water mural for the Bolgart Hall. Round one results: <a href="/outcomes.html">outcomes page</a></footer>
+</div>
+<script>
+const ITEMS = [
+ { id:"TRACTOR_CROP", tag:"Working the wheat", t:"A tractor working the crop", who:"Asked for by name three times", why:"Harvest is the day the town stands still for. Suggested: a tractor in the field at harvest - an airseeder or a header at work." },
+ { id:"HARVEST_IN_PROGRESS", tag:"Same theme, wider shot", t:"Harvest in progress - grain trucks and all", who:"Suggested twice, nearly word for word", why:"Trucks on the road, chaser bins, the whole harvest rhythm. Suggested alongside the sheepdog by two people." },
+ { id:"SHEEPDOG_WORKING_SHEEP", tag:"The working farm", t:"A sheep dog working sheep, with Angus cattle", who:"Suggested twice", why:"The dog on the back of the ute, sheep in the yards, Angus cattle on the hill." },
+ { id:"GRAIN_TRUCKS", tag:"Moving the grain", t:"Grain trucks on the move", who:"Suggested twice", why:"The trucks carting off the field are as much a part of harvest as the header." },
+ { id:"XF_UTE", tag:"A local legend", t:"The red XF Falcon ute", who:"Names a local identity", why:"Asked for by name: a red XF Falcon ute after a local resident - the ute everyone here can pick." },
+ { id:"BEDFORD_TRUCK", tag:"Remembered", t:"The blue Bedford truck carting hay and wool", who:"A memory from growing up here", why:"The blue truck that carted hay and bags of wool around the district, remembered by name of what it carried." },
+ { id:"SAWMILL_HILL_CAR", tag:"A landmark", t:"The rusty old car on top of Sawmill Hill", who:"Nominated to cop a vote", why:"The old rusty car sitting on Sawmill Hill - it has been there forever and everybody knows it." },
+ { id:"SILOS", tag:"On the skyline", t:"Silos on the skyline", who:"Suggested with the old farmer", why:"The silos are Bolgart from the highway. Suggested: silos with an old farmer working beneath them." },
+ { id:"OLD_FARMER", tag:"The people question", t:"An old farmer, working", who:"Suggested by a neighbour", why:"One neighbour said no people; another asked for the farmer in overhangs under the silos. You decide where the wall lands on people." },
+ { id:"EMU_WALLABY", tag:"Bigger animals", t:"Emu and wallaby", who:"Suggested as a maybe", why:"Maybe some larger fauna for scale - emu or wallaby against the trees." },
+ { id:"DONKEY_ORCHID_GILGIE", tag:"Spring in the grass", t:"Donkey orchid and Gilgie", who:"Suggested by a neighbour", why:"The native orchids the district is known for, at ground level in the bush." },
+ { id:"HILLTOP_GROVE", tag:"The town's back view", t:"A hilltop stand of salmon gums, wandoo and casuarina", who:"Described in detail", why:"Salmon gums, wandoo and casuarina grove on their hill - the ones you see on Bolgart West Road and around Wattening." },
+ { id:"BELL_TOWER", tag:"Bolgart's history", t:"The bell tower", who:"Suggested with the footy club", why:"Part of the town's history block: the bell tower, the footy club, the pieces everyone grew up with." },
+ { id:"FOOTY_CLUB", tag:"Bolgart's history", t:"The football club", who:"Suggested with the bell tower", why:"Saturday footy at the Rec - one of the things the town is known by." },
+ { id:"WHEAT_REDO", tag:"Fix what is there", t:"Draw the wheat so it reads as wheat", who:"Suggested plainly", why:"One voter said: wheat that looks like wheat, not the image shown. The answer is to redraw the wheat itself." },
+ { id:"TOWN_FARM_SCENE", tag:"The whole story", t:"A farming scene that represents the town", who:"Asked for as a scene, not a single thing", why:"One picture that holds the town: paddock, machine, sheep, sky." },
+ { id:"COMBINE_FARMING_NATURE", tag:"The through-line", t:"Farming and nature woven across the whole wall", who:"Suggested by name", why:"Not a new animal - the way the whole mural sits together: farming scenes and native bush telling one story." }
+];
+let picks = { yes: [], no: [] };
+let i = 0;
+const card = document.getElementById('card');
+function show() {
+  if (i >= ITEMS.length) { end(); return; }
+  const it = ITEMS[i];
+  document.getElementById('counter').textContent = 'Idea ' + (i + 1) + ' of ' + ITEMS.length;
+  document.getElementById('tag').textContent = it.tag;
+  document.getElementById('item').textContent = it.t;
+  document.getElementById('who').textContent = it.who;
+  document.getElementById('why').textContent = it.why;
+  card.className = 'card';
+}
+function answer(kind, btn) {
+  const it = ITEMS[i];
+  picks[kind].push(it.id);
+  btn.classList.add(kind === 'yes' ? 'flash-good' : 'flash-bad');
+  setTimeout(function () { btn.classList.remove('flash-good'); btn.classList.remove('flash-bad'); i++; show(); }, 180);
+}
+document.getElementById('bYes').addEventListener('click', function () { answer('yes', this); });
+document.getElementById('bNo').addEventListener('click', function () { answer('no', this); });
+document.getElementById('bPass').addEventListener('click', function () { i++; show(); });
+function end() {
+  document.getElementById('deck').style.display = 'none';
+  document.getElementById('sEnd').style.display = 'block';
+  window.scrollTo(0, 0);
+}
+function showOk() {
+  document.getElementById('okMsg').style.display = 'block';
+  document.getElementById('bSend').style.display = 'none';
+  document.getElementById('bCopy').style.display = 'none';
+}
+function sendIt() {
+  const payload = {
+    yes: picks.yes, no: picks.no,
+    name: document.getElementById('name').value,
+    idea: document.getElementById('idea').value
+  };
+  fetch('/api/sg', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+    .then(function (r) { return r.json(); })
+    .then(function (d) { if (d.ok) { showOk(); } else { throw new Error('no ok'); } })
+    .catch(function () { copyOut(); });
+}
+function copyOut() {
+  const text = 'BOLGART MURAL - suggestions round two\nVoted on: ' + ITEMS.filter(function (x) { return picks.yes.indexOf(x.id) >= 0; }).map(function (x) { return x.t; }).join('; ')
+    + '\nNot on the wall: ' + ITEMS.filter(function (x) { return picks.no.indexOf(x.id) >= 0; }).map(function (x) { return x.t; }).join('; ')
+    + '\nAnything else: ' + document.getElementById('idea').value
+    + '\nName: ' + document.getElementById('name').value
+    + '\n\nPlease copy the above and send it to the Progress Association (bolgartprogress@gmail.com).';
+  navigator.clipboard.writeText(text).then(function () {
+    document.getElementById('bCopy').textContent = 'Copied. Paste it into an email or a message to the Progress Association.';
+  }, function () {
+    prompt('Copy this and send it to bolgartprogress@gmail.com:', text);
+  });
+}
+document.getElementById('bSend').addEventListener('click', sendIt);
+document.getElementById('bCopy').addEventListener('click', copyOut);
+show();
+</script>
+</body>
+</html>
