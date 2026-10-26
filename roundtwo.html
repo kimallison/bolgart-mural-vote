@@ -69,7 +69,7 @@ function mergeStash(counters, answers) {
   if (STASH.idea) { answers.unshift({ idea: STASH.idea, name: STASH.name || 'yours' }); }
 }
 function load() {
-  fetch('/api/sg-tally', { cache: 'no-store' }).then(r => r.json()).then(function (d) {
+  fetch('/api/sg-tally?bust=' + Date.now(), { cache: 'no-store' }).then(r => r.json()).then(function (d) {
     if (!d.ok) return;
     if (liveCaughtUp(d.total)) { STASH = null; }
     document.getElementById('tot').textContent = d.total + (STASH ? 1 : 0);

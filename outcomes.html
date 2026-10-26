@@ -63,7 +63,7 @@ const SUGG = [
  { id:"COMBINE_FARMING_NATURE", t:"Farming and nature woven across the whole wall", who:"The through-line several people wanted" }
 ];
 function load() {
-  fetch('/api/tally', { cache: 'no-store' }).then(r => r.json()).then(function (d) {
+  fetch('/api/tally?bust=' + Date.now(), { cache: 'no-store' }).then(r => r.json()).then(function (d) {
     if (d.ok) {
       document.getElementById('tot').textContent = d.total + ' people';
       let out = '';
@@ -81,7 +81,7 @@ function load() {
   }).catch(function () {
     document.getElementById('body').innerHTML = '<div class="none">The count is not loading. Try again in a moment.</div>';
   });
-  fetch('/api/sg-tally', { cache: 'no-store' }).then(r => r.json()).then(function (d) {
+  fetch('/api/sg-tally?bust=' + Date.now(), { cache: 'no-store' }).then(r => r.json()).then(function (d) {
     if (d.ok) {
       
       let s = '';
