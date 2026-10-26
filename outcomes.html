@@ -31,7 +31,7 @@
 </head>
 <body>
 <h1>The outcomes</h1>
-<div class="sub">The first round closed on <b>Monday 26 October</b>. <b id="tot">- people</b> had their say on the 26 pictures: what stays on the wall, what comes off, and what is missing. This page gathers all of it, and turns what people asked for into the next round: the suggested additions. <b id="votlbl">The second-round count sits at</b> <b id="vot">0</b><span id="votpl"> answers</span> so far.</div>
+<div class="sub">The first round closed on <b>Monday 26 October</b>. <b id="tot">- people</b> had their say on the 26 pictures: what stays on the wall, what comes off, and what is missing. This page gathers all of it, and turns what people asked for into the next round: the suggested additions. The round-two count never sits on this page - the vote gets to breathe. It reveals on its own page for those who have had their say.</div>
 
 <h2>What the wall is wearing well</h2>
 <div id="body"><div class="none">Loading the count</div></div>
@@ -98,17 +98,12 @@ function load() {
   });
   fetch('/api/sg-tally', { cache: 'no-store' }).then(r => r.json()).then(function (d) {
     if (d.ok) {
-      document.getElementById('vot').textContent = d.total;
-      document.getElementById('votpl').textContent = d.total === 1 ? ' answer' : ' answers';
+      
       let s = '';
       SUGG.forEach(function (x) {
-        const c = d.counts[x.id] || { yes: 0, no: 0 };
-        s += '<div class="row"><span class="n" style="font-weight:600">' + esc(x.t) + '</span><span class="c"><span class="k">' + c.yes + ' put it on</span><span class="o">' + c.no + ' not</span></span></div>';
+        s += '<div class="row"><span class="n" style="font-weight:600">' + esc(x.t) + '</span><span class="c"><span class="who" style="color:#7a7a7a;font-size:0.78rem;text-align:right">' + esc(x.who) + '</span></span></div>';
       });
-      d.answers.slice(0, 12).forEach(function (a) {
-        s += '<div class="quote">' + esc(a.idea) + (a.name ? '<span class="who">- ' + esc(a.name) + '</span>' : '') + '</div>';
-      });
-      document.getElementById('sugg').innerHTML = s + '<div class="rule">The rules from round one hold: everything native to this district, nothing modern. <b>The vote decides the people question</b> - an old farmer at the silos goes on only if the town says so.</div>';
+      document.getElementById('sugg').innerHTML = s + '<div class="rule">The rules from round one hold: everything native to this district, nothing modern. <b>The vote decides the people question</b> - an old farmer at the silos goes on only if the town says so.</div><div class="rule">No numbers on this page before you vote. Once you have, the running count reveals here: <b><a href="/roundtwo.html">the round-two count</a></b>.</div>';
     } else { document.getElementById('sugg').innerHTML = '<div class="none">Count loading - give it a moment.</div>'; }
   }).catch(function () {
     document.getElementById('sugg').innerHTML = '<div class="none">Count loading - give it a moment.</div>';

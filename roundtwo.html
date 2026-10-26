@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolgart mural - round two, the running count</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%230a0a0a'/></svg>">
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin:0; padding:0; background:#0a0a0a; color:#fff; }
+  body { font-family:-apple-system,'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; padding:1.6rem 1.15rem 2.6rem; }
+  h1 { font-family:'Playfair Display',Georgia,serif; font-weight:500; font-size:1.55rem; margin:0 0 0.4rem; }
+  .sub { color:#9a9a9a; font-size:0.88rem; line-height:1.55; margin-bottom:0.9rem; }
+  .sub b { color:#fff; font-weight:600; }
+  .row { display:flex; justify-content:space-between; gap:0.8rem; padding:0.5rem 0; border-bottom:1px solid #1e1e1e; font-size:0.94rem; }
+  .row .n { color:#e8e8e8; line-height:1.35; }
+  .row .c { font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .c .k { color:#5dd97c; font-weight:600; }
+  .c .o { color:#ff7b6b; font-weight:600; margin-left:0.7em; }
+  .none { color:#5a5a5a; }
+  .quote { padding:0.55rem 0.8rem; border-left:2px solid #3a3a3a; margin:0.45rem 0; font-size:0.92rem; color:#dcdcdc; }
+  .quote .who { color:#7a7a7a; font-size:0.78rem; display:block; margin-top:0.25rem; }
+  .cta { display:block; text-align:center; background:#161616; border:1px solid #2c2c2c; border-radius:14px; padding:1.05rem 1rem; margin:1.3rem 0 0.4rem; font-size:1.02rem; font-weight:600; color:#fff; text-decoration:none; }
+  .cta span { color:#5dd97c; }
+  footer { margin-top:2rem; font-size:0.78rem; color:#6a6a6a; }
+  a { color:#e8e8e8; }
+</style>
+</head>
+<body>
+<h1>The running count</h1>
+<div class="sub"><b id="tot">0</b> people have voted on the suggested additions so far. The numbers move as the words come in - the wall gets built by whatever the town says. If you haven't had your say yet, do that first so the count means more before you look.</div>
+<a class="cta" href="/suggestions.html">Vote first <span>- then come back and look</span></a>
+
+<h2>Put it on / not on the wall</h2>
+<div id="counts"><div class="none">Loading the count</div></div>
+
+<h2>What people added in their own words</h2>
+<div id="notes"><div class="none">Nothing written yet this round.</div></div>
+
+<footer>Place of Water mural for the Bolgart Hall. Round one: <a href="/outcomes.html">the outcomes page</a></footer>
+<script>
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+const SUGG = [
+ { id:"TRACTOR_CROP", t:"A tractor working the crop" },
+ { id:"HARVEST_IN_PROGRESS", t:"Harvest in progress - grain trucks on the move" },
+ { id:"SHEEPDOG_WORKING_SHEEP", t:"A sheep dog working sheep, with Angus cattle" },
+ { id:"GRAIN_TRUCKS", t:"Grain trucks carting from the field" },
+ { id:"XF_UTE", t:"The red XF Falcon ute" },
+ { id:"BEDFORD_TRUCK", t:"The blue Bedford truck that carted hay and wool" },
+ { id:"SAWMILL_HILL_CAR", t:"The rusty old car on top of Sawmill Hill" },
+ { id:"SILOS", t:"Silos on the skyline" },
+ { id:"OLD_FARMER", t:"An old farmer, working" },
+ { id:"EMU_WALLABY", t:"Emu and wallaby" },
+ { id:"DONKEY_ORCHID_GILGIE", t:"Donkey orchid and Gilgie" },
+ { id:"HILLTOP_GROVE", t:"A hilltop stand of salmon gums, wandoo and casuarina" },
+ { id:"BELL_TOWER", t:"The bell tower" },
+ { id:"FOOTY_CLUB", t:"The football club" },
+ { id:"WHEAT_REDO", t:"Redraw the wheat so it reads as wheat" },
+ { id:"TOWN_FARM_SCENE", t:"A farming scene that represents the town" },
+ { id:"COMBINE_FARMING_NATURE", t:"Farming and nature woven across the whole wall" }
+];
+function load() {
+  fetch('/api/sg-tally', { cache: 'no-store' }).then(r => r.json()).then(function (d) {
+    if (!d.ok) return;
+    document.getElementById('tot').textContent = d.total;
+    let s = '';
+    const ranked = SUGG.map(function (x) { const c = d.counts[x.id] || { yes: 0, no: 0 }; return { x: x, net: c.yes - c.no, yes: c.yes, no: c.no }; }).sort(function (a, b) { return b.net - a.net; });
+    ranked.forEach(function (r) {
+      const c = (r.yes || r.no)
+        ? '<span class="k">' + r.yes + ' put it on</span><span class="o">' + r.no + ' not</span>'
+        : '<span class="none">no votes yet</span>';
+      s += '<div class="row"><span class="n">' + esc(r.x.t) + '</span><span class="c">' + c + '</span></div>';
+    });
+    document.getElementById('counts').innerHTML = s;
+    let n = '';
+    if (d.answers.length) {
+      d.answers.forEach(function (a) {
+        n += '<div class="quote">' + esc(a.idea) + (a.name ? '<span class="who">- ' + esc(a.name) + '</span>' : '') + '</div>';
+      });
+    } else { n = '<div class="none">Nothing written yet this round.</div>'; }
+    document.getElementById('notes').innerHTML = n;
+  }).catch(function () {
+    document.getElementById('counts').innerHTML = '<div class="none">The count is not loading. Try again in a moment.</div>';
+  });
+}
+load();
+setInterval(load, 25000);
+</script>
+</body>
+</html>
