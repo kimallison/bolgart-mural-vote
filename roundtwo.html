@@ -42,22 +42,22 @@
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 const SUGG = [
  { id:"TRACTOR_CROP", t:"A tractor working the crop" },
- { id:"HARVEST_IN_PROGRESS", t:"Harvest in progress - grain trucks on the move" },
- { id:"SHEEPDOG_WORKING_SHEEP", t:"A sheep dog working sheep, with Angus cattle" },
- { id:"GRAIN_TRUCKS", t:"Grain trucks carting from the field" },
+ { id:"HARVEST_IN_PROGRESS", t:"Harvest in progress" },
+ { id:"SHEEPDOG_WORKING_SHEEP", t:"A sheep dog working sheep" },
+ { id:"GRAIN_TRUCKS", t:"Grain trucks carting off the field" },
  { id:"XF_UTE", t:"The red XF Falcon ute" },
- { id:"BEDFORD_TRUCK", t:"The blue Bedford truck that carted hay and wool" },
- { id:"SAWMILL_HILL_CAR", t:"The rusty old car on top of Sawmill Hill" },
+ { id:"BEDFORD_TRUCK", t:"The blue Bedford truck" },
+ { id:"SAWMILL_HILL_CAR", t:"The rusty old car on Sawmill Hill" },
  { id:"SILOS", t:"Silos on the skyline" },
  { id:"OLD_FARMER", t:"An old farmer, working" },
  { id:"EMU_WALLABY", t:"Emu and wallaby" },
  { id:"DONKEY_ORCHID_GILGIE", t:"Donkey orchid and Gilgie" },
- { id:"HILLTOP_GROVE", t:"A hilltop stand of salmon gums, wandoo and casuarina" },
+ { id:"HILLTOP_GROVE", t:"A hilltop stand of salmon gums" },
  { id:"BELL_TOWER", t:"The bell tower" },
  { id:"FOOTY_CLUB", t:"The football club" },
- { id:"WHEAT_REDO", t:"Redraw the wheat so it reads as wheat" },
+ { id:"WHEAT_REDO", t:"Wheat that reads as real wheat" },
  { id:"TOWN_FARM_SCENE", t:"A farming scene that represents the town" },
- { id:"COMBINE_FARMING_NATURE", t:"Farming and nature woven across the whole wall" }
+ { id:"COMBINE_FARMING_NATURE", t:"Farming and nature, one wall" }
 ];
 function load() {
   fetch('/api/sg-tally', { cache: 'no-store' }).then(r => r.json()).then(function (d) {
