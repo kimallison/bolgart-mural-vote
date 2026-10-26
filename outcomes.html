@@ -31,7 +31,7 @@
 </head>
 <body>
 <h1>The outcomes</h1>
-<div class="sub">The first round closed on <b>Monday 26 October</b>. <b id="tot">- people</b> had their say on the 26 pictures: what stays on the wall, what comes off, and what is missing. This page gathers all of it, and turns what people asked for into the next round: the suggested additions. <b id="vot">- people</b> have voted on those so far.</div>
+<div class="sub">The first round closed on <b>Monday 26 October</b>. <b id="tot">- people</b> had their say on the 26 pictures: what stays on the wall, what comes off, and what is missing. This page gathers all of it, and turns what people asked for into the next round: the suggested additions. <b id="votlbl">The second-round count sits at</b> <b id="vot">0</b><span id="votpl"> answers</span> so far.</div>
 
 <h2>What the wall is wearing well</h2>
 <div id="body"><div class="none">Loading the count</div></div>
@@ -98,7 +98,8 @@ function load() {
   });
   fetch('/api/sg-tally', { cache: 'no-store' }).then(r => r.json()).then(function (d) {
     if (d.ok) {
-      document.getElementById('vot').textContent = d.total + ' people';
+      document.getElementById('vot').textContent = d.total;
+      document.getElementById('votpl').textContent = d.total === 1 ? ' answer' : ' answers';
       let s = '';
       SUGG.forEach(function (x) {
         const c = d.counts[x.id] || { yes: 0, no: 0 };
