@@ -25,6 +25,7 @@ function send(res, code, obj) {
   res.statusCode = code;
   res.setHeader('Content-Type', 'application/json');
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cache-Control', 'no-store, max-age=0');
   res.end(JSON.stringify(obj));
 }
 
