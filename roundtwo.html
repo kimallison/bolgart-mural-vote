@@ -37,6 +37,17 @@
 
 <footer>Place of Water mural for the Bolgart Hall. This page is just for this round. Haven't voted yet? <a href="/suggestions.html">Vote here</a>.</footer>
 <script>
+try {
+  var _mv = localStorage.muralVid || (localStorage.muralVid = Math.random().toString(36).slice(2) + Date.now().toString(36));
+  var _mk = 'muralPing_' + new Date().toISOString().slice(0, 10) + '_' + location.pathname.replace(/[^a-z]/gi, '');
+  if (!localStorage.getItem(_mk)) {
+    localStorage.setItem(_mk, '1');
+    fetch('/api/visit', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ v: _mv, p: location.pathname.replace(/[^a-z]/gi, '').slice(0, 6) }) });
+  }
+} catch (e) {}
+</script>
+<script>
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 const SUGG = [
  { id:"TRACTOR_CROP", t:"A tractor working the crop" },

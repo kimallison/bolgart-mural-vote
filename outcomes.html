@@ -40,7 +40,18 @@
 <div id="sugg"></div>
 <a class="cta" href="/suggestions.html">Vote on these ideas <span>- one at a time, takes a minute</span></a>
 
-<footer>Place of Water mural for the Bolgart Hall. The picture vote: <a href="/results.html">results</a></footer>
+<footer>Place of Water mural for the Bolgart Hall. The picture vote: <a href="/results.html">results</a><span id="visits"></span></footer>
+<script>
+try {
+  var _mv = localStorage.muralVid || (localStorage.muralVid = Math.random().toString(36).slice(2) + Date.now().toString(36));
+  var _mk = 'muralPing_' + new Date().toISOString().slice(0, 10) + '_' + location.pathname.replace(/[^a-z]/gi, '');
+  if (!localStorage.getItem(_mk)) {
+    localStorage.setItem(_mk, '1');
+    fetch('/api/visit', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ v: _mv, p: location.pathname.replace(/[^a-z]/gi, '').slice(0, 6) }) });
+  }
+} catch (e) {}
+</script>
 <script>
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 const SUGG = [
@@ -96,6 +107,9 @@ function load() {
 }
 load();
 setInterval(load, 20000);
+fetch('/api/visit', { cache: 'no-store' }).then(r => r.json()).then(function (d) {
+  if (d.ok) { document.getElementById('visits').textContent = ' - ' + d.devices + ' device' + (d.devices === 1 ? '' : 's') + ' have opened this page.'; }
+});
 </script>
 </body>
 </html>
