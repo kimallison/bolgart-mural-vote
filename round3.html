@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Bolgart mural - round three, the new ideas</title>
-<meta property="og:title" content="Bolgart mural - round three: the final ideas">
-<meta property="og:description" content="Steph's four historical concepts plus the grain trucks tie-breaker. One idea at a time, words only: would it go on the hall wall or not?">
+<title>Bolgart mural - round three: mural ideas</title>
+<meta property="og:title" content="Bolgart mural - round three: mural ideas">
+<meta property="og:description" content="Vote on five ideas for the Place of Water mural at Bolgart Hall.">
 <meta property="og:image" content="https://bolgart-mural-vote.vercel.app/hall-wall.jpg">
 <meta property="og:url" content="https://bolgart-mural-vote.vercel.app/round3.html">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%230a0a0a'/></svg>">
@@ -69,8 +69,8 @@
   <div class="hint" style="display:none">Swipe the card, or use the buttons. Green puts it on the wall; red leaves it off.</div>
 
   <div class="endbox" id="sIntro">
-    <h2>Round three: the final ideas</h2>
-    <p>Steph Clarke's four historical concepts: the old school, the original store, the CBH silos and wheat bags at CBH, plus the grain trucks tie-breaker that stayed unresolved in round two. One idea at a time, words only: would it go on the wall, or not? There is no wrong answer.</p>
+    <h2>Round three: mural ideas</h2>
+    <p>Vote on five ideas for the mural. Swipe right to put an idea on the wall or left to leave it off. You can also use the buttons.</p>
     <button class="big" id="bStart">Start swiping</button>
   </div>
 
@@ -84,7 +84,7 @@
     <button class="ghost" id="bCopy">Save a copy instead</button>
   </div>
 
-  <footer>Place of Water mural for the Bolgart Hall. Your answers are on their own page, just for this round.</footer>
+  <footer>Place of Water mural for the Bolgart Hall.</footer>
 <script>
 try {
   var _mv = localStorage.muralVid || (localStorage.muralVid = Math.random().toString(36).slice(2) + Date.now().toString(36));
@@ -99,10 +99,10 @@ try {
 <script>
 var MANIFEST = [
  {"id": "OLD_SCHOOL", "i": 0, "t": "The old Bolgart school", "d": "The school building known as the Honey House - part of the 1839 townsite by Captain John Scully."},
- {"id": "GENERAL_STORE", "i": 1, "t": "The original general store", "d": "Where Fred and Jean Broomhall traded after 1937, then Jack Turner carried on through the 1940s."},
- {"id": "CBH_SILOS", "i": 2, "t": "The CBH silos and bulkheads", "d": "The grain storage that defines Bolgart's skyline - concrete giants holding the town's harvest."},
- {"id": "WHEAT_BAGS_HANDLOADED", "i": 3, "t": "Wheat bags hand-loaded at CBH", "d": "A moment of the harvest - bags lifted by hand, the weight of the season moved into storage."},
- {"id": "GRAIN_TRUCKS", "i": 4, "t": "Grain trucks carting off the field", "d": "A re-vote - this one stayed tied in round two. Does it go on the wall or not?"}
+ {"id": "GENERAL_STORE", "i": 1, "t": "The original general store", "d": "Fred and Jean Broomhall traded here after 1937. Jack Turner carried on through the 1940s."},
+ {"id": "CBH_SILOS", "i": 2, "t": "The CBH silos and bulkheads", "d": "CBH's grain silos and bulkheads for loading grain."},
+ {"id": "WHEAT_BAGS_HANDLOADED", "i": 3, "t": "Wheat bags hand-loaded at CBH", "d": "Wheat bags lifted and loaded by hand at CBH."},
+ {"id": "GRAIN_TRUCKS", "i": 4, "t": "Grain trucks carting off the field", "d": "Grain trucks taking the harvest to the silos."}
 ];
 var YES = []; var NO = []; var pos = 0; var saveTotal = null; var started = false; var dragging = false; var startX = 0; var dragX = 0; var animating = false;
 var card = document.getElementById('card');

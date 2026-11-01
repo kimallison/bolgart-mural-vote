@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bolgart mural - round three, the answers so far</title>
-<meta property="og:title" content="Bolgart mural - round three: the answers so far">
-<meta property="og:description" content="The running count for round three. If you haven't voted, do that first:">
+<title>Bolgart mural - round three: answers so far</title>
+<meta property="og:title" content="Bolgart mural - round three: answers so far">
+<meta property="og:description" content="Round three votes for the Place of Water mural at Bolgart Hall.">
 <meta property="og:image" content="https://bolgart-mural-vote.vercel.app/hall-wall.jpg">
 <meta property="og:url" content="https://bolgart-mural-vote.vercel.app/round3-count.html">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%230a0a0a'/></svg>">
@@ -32,18 +32,15 @@
 </head>
 <body>
 <h1>Round three: the answers so far</h1>
-<div class="sub">Votes so far: <b id="tot">0</b>. The count moves as the words come in. If you haven't had your say, do that first.</div>
+<div class="sub">Votes so far: <b id="tot">0</b>.</div>
 
 <h2>Put it on / not on the wall</h2>
 <div id="counts"><div class="none">Loading the count</div></div>
 
-<h2>What Steph remembered</h2>
-<div id="notes">
-  <div class="quote">Steph Clarke's four ideas via text on 30 Oct: the old Bolgart school (Honey House), the original general store, the CBH silos and bulkheads, wheat bags hand-loaded at CBH.</div>
-  <div class="quote">Plus the grain trucks tie-breaker - it stayed at 7/8 in round two. This round decides it.</div>
-</div>
+<h2>Other ideas for the mural</h2>
+<div id="notes"><div class="none">No other ideas yet.</div></div>
 
-<footer>Place of Water mural for the Bolgart Hall. This page is just for this round. Haven't voted yet? <a href="/round3.html">Vote here</a>.</footer>
+<footer>Place of Water mural for the Bolgart Hall. Haven't voted yet? <a href="/round3.html">Vote here</a>.</footer>
 <script>
 try {
   var _mv = localStorage.muralVid || (localStorage.muralVid = Math.random().toString(36).slice(2) + Date.now().toString(36));
@@ -89,8 +86,8 @@ function load() {
       a2.forEach(function (a) {
         n += '<div class="quote">' + esc(a.idea) + '</div>';
       });
-    } else { n = '<div class="none">Nothing written yet this round.</div>'; }
-    document.getElementById('notes').innerHTML = n + '<div class="quote">Steph Clarke\'s four ideas via text on 30 Oct: the old Bolgart school (Honey House), the original general store, the CBH silos and bulkheads, wheat bags hand-loaded at CBH.<br><br>Plus the grain trucks tie-breaker - it stayed at 7/8 in round two. This round decides it.</div>';
+    } else { n = '<div class="none">No other ideas yet.</div>'; }
+    document.getElementById('notes').innerHTML = n;
   }).catch(function () {
     document.getElementById('counts').innerHTML = '<div class="none">The count is not loading. Try again in a moment.</div>';
   });
