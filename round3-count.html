@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bolgart mural - round three, the answers so far</title>
+<meta property="og:title" content="Bolgart mural - round three: the answers so far">
+<meta property="og:description" content="The running count for round three. If you haven't voted, do that first:">
+<meta property="og:image" content="https://bolgart-mural-vote.vercel.app/hall-wall.jpg">
+<meta property="og:url" content="https://bolgart-mural-vote.vercel.app/round3-count.html">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%230a0a0a'/></svg>">
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin:0; padding:0; background:#0a0a0a; color:#fff; }
+  body { font-family:-apple-system,'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; padding:1.6rem 1.15rem 2.6rem; }
+  h1 { font-family:'Playfair Display',Georgia,serif; font-weight:500; font-size:1.55rem; margin:0 0 0.4rem; }
+  .sub { color:#9a9a9a; font-size:0.88rem; line-height:1.55; margin-bottom:0.9rem; }
+  .sub b { color:#fff; font-weight:600; }
+  .row { display:flex; justify-content:space-between; gap:0.8rem; padding:0.5rem 0; border-bottom:1px solid #1e1e1e; font-size:0.94rem; }
+  .row .n { color:#e8e8e8; line-height:1.35; }
+  .row .c { font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .c .k { color:#5dd97c; font-weight:600; }
+  .c .o { color:#ff7b6b; font-weight:600; margin-left:0.7em; }
+  .none { color:#5a5a5a; }
+  .quote { padding:0.55rem 0.8rem; border-left:2px solid #3a3a3a; margin:0.45rem 0; font-size:0.92rem; color:#dcdcdc; }
+
+  .cta { display:block; text-align:center; background:#161616; border:1px solid #2c2c2c; border-radius:14px; padding:1.05rem 1rem; margin:1.3rem 0 0.4rem; font-size:1.02rem; font-weight:600; color:#fff; text-decoration:none; }
+  .cta span { color:#5dd97c; }
+  footer { margin-top:2rem; font-size:0.78rem; color:#6a6a6a; }
+  a { color:#e8e8e8; }
+</style>
+</head>
+<body>
+<h1>Round three: the answers so far</h1>
+<div class="sub">Votes so far: <b id="tot">0</b>. The count moves as the words come in. If you haven't had your say, do that first.</div>
+
+<h2>Put it on / not on the wall</h2>
+<div id="counts"><div class="none">Loading the count</div></div>
+
+<h2>What Steph remembered</h2>
+<div id="notes">
+  <div class="quote">Steph Clarke's four ideas via text on 30 Oct: the old Bolgart school (Honey House), the original general store, the CBH silos and bulkheads, wheat bags hand-loaded at CBH.</div>
+  <div class="quote">Plus the grain trucks tie-breaker - it stayed at 7/8 in round two. This round decides it.</div>
+</div>
+
+<footer>Place of Water mural for the Bolgart Hall. This page is just for this round. Haven't voted yet? <a href="/round3.html">Vote here</a>.</footer>
+<script>
+try {
+  var _mv = localStorage.muralVid || (localStorage.muralVid = Math.random().toString(36).slice(2) + Date.now().toString(36));
+  var _mk = 'muralPing_' + new Date().toISOString().slice(0, 10) + '_' + location.pathname.replace(/[^a-z]/gi, '');
+  if (!localStorage.getItem(_mk)) {
+    localStorage.setItem(_mk, '1');
+    fetch('/api/visit', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ v: _mv, p: location.pathname.replace(/[^a-z]/gi, '').slice(0, 6) }) });
+  }
+} catch (e) {}
+</script>
+<script>
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+const SUGG3 = [
+  { id: "OLD_SCHOOL", t: "The old Bolgart school" },
+  { id: "GENERAL_STORE", t: "The original general store" },
+  { id: "CBH_SILOS", t: "The CBH silos and bulkheads" },
+  { id: "WHEAT_BAGS_HANDLOADED", t: "Wheat bags hand-loaded at CBH" },
+  { id: "GRAIN_TRUCKS", t: "Grain trucks carting off the field" }
+];
+var STASH = null;
+try { STASH = JSON.parse(sessionStorage.getItem('mural_r3_last') || 'null'); } catch (e) {}
+function liveCaughtUp(total) { return !STASH || (STASH.expectedTotal !== null && STASH.expectedTotal !== undefined && total >= STASH.expectedTotal); }
+function load() {
+  fetch('/api/sg3-tally?bust=' + Date.now(), { cache: 'no-store' }).then(r => r.json()).then(function (d) {
+    if (!d.ok) return;
+    if (liveCaughtUp(d.total)) { STASH = null; }
+    document.getElementById('tot').textContent = d.total + (STASH ? 1 : 0);
+    const cy = STASH ? (function () { const c = JSON.parse(JSON.stringify(d.counts.yes)); (STASH.yes || []).forEach(function (id) { if (c[id] !== undefined) c[id]++; }); return c; })() : d.counts.yes;
+    const cn = STASH ? (function () { const c = JSON.parse(JSON.stringify(d.counts.no)); (STASH.no || []).forEach(function (id) { if (c[id] !== undefined) c[id]++; }); return c; })() : d.counts.no;
+    const a2 = STASH ? (function () { const a = JSON.parse(JSON.stringify(d.answers)); if (STASH.idea) { a.unshift({ idea: STASH.idea }); } return a; })() : d.answers;
+    let s = '';
+    const ranked = SUGG3.map(function (x) { const yy = cy[x.id] || 0; const nn = cn[x.id] || 0; return { x: x, net: yy - nn, yes: yy, no: nn }; }).sort(function (a, b) { return b.net - a.net; });
+    ranked.forEach(function (r) {
+      const c = (r.yes || r.no)
+        ? '<span class="k">' + r.yes + ' put it on</span><span class="o">' + r.no + ' not</span>'
+        : '<span class="none">no votes yet</span>';
+      s += '<div class="row"><span class="n">' + esc(r.x.t) + '</span><span class="c">' + c + '</span></div>';
+    });
+    document.getElementById('counts').innerHTML = s;
+    let n = '';
+    if (a2.length) {
+      a2.forEach(function (a) {
+        n += '<div class="quote">' + esc(a.idea) + '</div>';
+      });
+    } else { n = '<div class="none">Nothing written yet this round.</div>'; }
+    document.getElementById('notes').innerHTML = n + '<div class="quote">Steph Clarke\'s four ideas via text on 30 Oct: the old Bolgart school (Honey House), the original general store, the CBH silos and bulkheads, wheat bags hand-loaded at CBH.<br><br>Plus the grain trucks tie-breaker - it stayed at 7/8 in round two. This round decides it.</div>';
+  }).catch(function () {
+    document.getElementById('counts').innerHTML = '<div class="none">The count is not loading. Try again in a moment.</div>';
+  });
+}
+load();
+setInterval(load, 25000);
+</script>
+</body>
+</html>
